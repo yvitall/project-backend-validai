@@ -23,7 +23,7 @@
 
 ## 2. Regras de Negócio (Mínimo 10)
 1. [RN01] - **User:** Para se inscrever em um evento, é necessário ser cadastrado no sistema
-2. [RN02] - **User:** Para se cadastrar no sistema, é obrigatório: Nome, sobrenome, senha, email
+2. [RN02] - **User:** Para se cadastrar no sistema, é obrigatório: Nome, sobrenome, email, senha.
 3. [RN03] - **User:** Email: Só pode existir um usúario por email
 4. [RN04] - **User:** não pode se inscrever duas vezes no mesmo evento
 5. [RN05] - **Certificate:** Um participante só receberá seu certificado caso sua presença seja confirmada (validada por um organizador)
@@ -45,8 +45,20 @@
 
 **Justificativa:** Essas entidades cobrem o ciclo completo: usuários se cadastram, eventos são criados, participantes se inscrevem, organizadores validam presença e certificados são emitidos com base nas inscrições.
 
-## 3. Matriz de Permissões
+## Requisitos Funcionais
+[RF01] Um usuário deve conseguir se cadastrar
+[RF02] Um organizador deve conseguir cadastrar um evento
+[RF03] O sistema deve emitir um certificado de participação a cada evento em que for validado via QRCODE a presença do usuário
+[RF04]
+
+## Diagrama Entidade Relacionamento
+
+
+
+## Dicionário de Dados
+
+## Matriz de Permissões
 *(A ser preenchido)*
 
-## 4. Backlog e Critérios de Aceite
+## Backlog e Critérios de Aceite
 *(A ser preenchido) backlog no requirements? como é isso?*    
