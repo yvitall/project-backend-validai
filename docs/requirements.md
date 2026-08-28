@@ -40,7 +40,7 @@
 * User: usuários dividido em 3 papéis (Usuário, Organizador e Admin)
     * id, firstName, lastName, email, passwordHash, role, createdAt
 * Event: Cadastrados por organizadores ou admins
-    * id, title, description, location, date, hour, workload (INTEGER), capacity, speakerName, speakerTitle, status, organizerId
+    * id, title, description, location, date, hour, workload (INTEGER), capacity, speakerName, speakerTitle, status(ACTIVE/CANCELED/FINISHED), organizerId
 * Registration: Relacionamento entre User e Event
     * id, userId, eventId, registrationDate, status (ACTIVE/CANCELED/ATTENDED), attendanceConfirmed (boolean), attendanceConfirmedAt (timestamp), qrCode
 * Certificate: se for validado (checkin), o usuário receberá seu certificado contendo informações do evento. 
@@ -55,6 +55,7 @@
 4. [RF04]
 
 ## Modelagem Conceitual
+![ModConceitual](assets/modelagemConceitual.png)
 
 ## Modelagem Lógica - DER
 
