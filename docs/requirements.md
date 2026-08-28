@@ -40,19 +40,19 @@
 1. User: usuários dividido em 3 papéis (Usuário, Organizador e Admin)
 2. Event: Cadastrados por organizadores ou admins
 3. Registration: Relacionamento entre User e Event
-5. CheckIn: Entidade que registrará presença de usuários em eventos, relacionará usuário, evento e presença
 4. Certificate: se for validado (checkin), o usuário receberá seu certificado contendo informações do evento. 
 
 **Justificativa:** Essas entidades cobrem o ciclo completo: usuários se cadastram, eventos são criados, participantes se inscrevem, organizadores validam presença e certificados são emitidos com base nas inscrições.
 
 ## Requisitos Funcionais
-[RF01] Um usuário deve conseguir se cadastrar
-[RF02] Um organizador deve conseguir cadastrar um evento
-[RF03] O sistema deve emitir um certificado de participação a cada evento em que for validado via QRCODE a presença do usuário
-[RF04]
+1. [RF01] Um usuário deve conseguir se cadastrar
+2. [RF02] Um organizador deve conseguir cadastrar um evento
+3. [RF03] O sistema deve emitir um certificado de participação a cada evento em que for validado via QRCODE a presença do usuário
+4. [RF04]
 
-## Diagrama Entidade Relacionamento
+## Modelagem Conceitual
 
+## Modelagem Lógica - DER
 
 
 ## Dicionário de Dados
