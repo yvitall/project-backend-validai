@@ -26,7 +26,7 @@
 2. [RN02] - **User:** Para se cadastrar no sistema, é obrigatório: Nome, sobrenome, email, senha.
 3. [RN03] - **User:** Email: Só pode existir um usúario por email
 4. [RN04] - **User:** não pode se inscrever duas vezes no mesmo evento
-5. [RN05] - **Certificate:** Um participante só receberá seu certificado caso sua presença seja confirmada (validada por um organizador)
+13. [RN13] - **User:** Um usuário pode cancelar sua própria inscrição em um evento, desde que o evento ainda não tenha ocorrido. 
 6. [RN06] - **Event** Apenas admins e organizadores poderão criar eventos.
 7. [RN07] - **Event:** Para cadastrar um evento, é obrigatório: Título, Descrição, Local, Número de vagas, Data, Hora, Carga hóraria válida em horas, Palestrante e Título/Cargo do Palestrante
 8. [RN08] - **Event:** Um evento só pode ser cadastrado a partir do dia seguinte, ou seja, deve ser cadastrado com pelo menos um dia de antecedência pelo organizador 
@@ -34,7 +34,7 @@
 10. [RN10] - **Event:**  Um evento só pode ser editado pelo organizador que criou ou por um admin
 11. [RN11] - **Registration:** O número de inscrições não podem exceder a quantidade de vagas de um evento
 12. [RN12] - **Certificate:** A data de emissão do certificado deve ser a data de quando for emitido pelo sistema. 
-13. [RN13] - **User:** Um usuário pode cancelar sua própria inscrição em um evento, desde que o evento ainda não tenha ocorrido. 
+5. [RN05] - **Certificate:** Um participante só receberá seu certificado caso sua presença seja confirmada (validada por um organizador)
 
 ## 3. Entidades do Sistema
 * User: usuários dividido em 3 papéis (Usuário, Organizador e Admin)
@@ -58,9 +58,42 @@
 ![ModConceitual](assets/modelagemConceitual.png)
 
 ## Modelagem Lógica - DER
-
+![ModLogica](assets/modelagemLogica.png)
 
 ## Dicionário de Dados
+| Entidade | Campo | Tipo | Obrigatório | Regra |
+| -------- | ----- | ---- | --- | ----- |
+| USER | id | BIGINT | SIM | PK; UNIQUE |
+| USER | firstName | VARCHAR(50) | SIM | Mínimo 3 caracteres |
+| USER | lastName | VARCHAR(50) | SIM | Mínimo 3 caracteres |
+| USER | email | VARCHAR(255) | SIM | UNIQUE; Formato Email Válido |
+| USER | passwordHash | VARCHAR(255) | SIM | Armazenar Hash (BCrypt) |
+| USER | role | VARCHAR(12) | SIM | Cargo do usuário (Participante, Organizador, Admin) |
+| USER | createdAt | TIMESTAMP | SIM | Log de registro |
+| REGISTRATION | id | BIGINT | SIM | PK; UNIQUE |
+| REGISTRATION | (idUser, idEvent) | COMPOSITE UNIQUE | SIM | Garante que um usuário não se inscreva duas vezes no mesmo evento |
+| REGISTRATION | registrationAt | TIMESTAMP | SIM | Data e hora da inscrição no evento |
+| REGISTRATION | status | VARCHAR(8) | SIM | Valores: (ACTIVE/CANCELED/ATTENDED) |
+| REGISTRATION | attendanceConfirmed | BOOLEAN | SIM | registrar presença |
+| REGISTRATION | attendanceConfirmedAt | TIMESTAMP | NÃO | registrar data e hora da presença |
+| REGISTRATION | qrCode | VARCHAR(255) | SIM | UNIQUE; hash do qrcode de validação de presença do participante |
+| EVENT | id | BIGINT | SIM | PK; UNIQUE |
+| EVENT | idOrganizer | BIGINT | SIM | FK |
+| EVENT | title | VARCHAR(255) | SIM | Mínimo 5 caracteres |
+| EVENT | description | VARCHAR(255) | SIM | Mínimo 10 caracteres |
+| EVENT | location | VARCHAR(255) | SIM | Mínimo 10 caracteres | 
+| EVENT | date | DATE | SIM | A partir da data seguinte |
+| EVENT | hour | TIME | SIM | Horário do evento |
+| EVENT | workload | INTEGER | SIM | Valor inteiro que representa CH válida
+| EVENT | capacity | INTEGER | SIM | Valor inteiro que representa quantidade de participantes permitidos
+| EVENT | speakerName | VARCHAR(50) | SIM | Mínimo 3 caracteres |
+| EVENT | speakerTitle | VARCHAR(50) | SIM | Mínimo 3 caracteres |
+| EVENT | status | VARCHAR(8) | SIM | Valores: (ACTIVE/CANCELED/FINISHED)
+| CERTIFICATE | id | BIGINT | SIM | PK; UNIQUE |
+| CERTIFICATE | idRegistration | BIGINT | SIM | FK; UNIQUE |
+| CERTIFICATE | issueDate | DATE | SIM | Data atual da emissão do certificado |
+| CERTIFICATE | certificateCode | VARCHAR(255) | SIM | UNIQUE; Hash código do certificado |
+| CERTIFICATE | pdfUrl | VARCHAR(255) | SIM | UNIQUE; Link de URL do certificado |
 
 ## Matriz de Permissões
 *(A ser preenchido)*
