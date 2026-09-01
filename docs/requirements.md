@@ -95,6 +95,190 @@
 | CERTIFICATE | certificateCode | VARCHAR(255) | SIM | UNIQUE; Hash código do certificado |
 | CERTIFICATE | pdfUrl | VARCHAR(255) | SIM | UNIQUE; Link de URL do certificado |
 
+## Contratos da API
+## 1.1 Cadastro de Usuário
+**POST /api/v1/users/register**
+- Descrição: Cria um novo usuário com papel padrão PARTICIPANT. Apenas administradores poderão alterar papéis posteriormente.
+**Entrada (JSON)**
+```json
+{
+    "firstName": "Jucelio",
+    "lastName": "Testador",
+    "email": "juceliotestador@email.com",
+    "password": "Abcd!123",
+}
+```
+**Saída (JSON): `201 Created`**
+```json
+{
+    "id": 1,
+    "firstName": "Jucelio",
+    "lastName": "Testador",
+    "email": "juceliotestador@email.com",
+    "role": "PARTICIPANT",
+    "createdAt": "2026-09-01T10:00:00"
+}
+```
+| Código | Significado |
+| --- | --- |
+| 201 | Usuário criado com sucesso. |
+| 400 | Dados inválidos (ex: email mal formatado, senha fraca). |
+| 422 | Email já cadastrado (violação de unicidade). |
+
+## 1.2 Login (Autenticação)
+**POST /api/v1/auth/login**
+- Descrição: Autentica o usuário e retorna um token JWT para acesso aos demais endpoints.
+    - Autenticação básica de credenciais de usuário, autenticação via JWT (será implementado na segunda unidade).
+
+**Entrada (JSON)**
+```json
+{
+  "email": "joao@email.com",
+  "password": "Senha@123"
+}
+```
+**Saída (JSON): `200 OK`**
+```json
+{
+  //"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  //"type": "Bearer",
+  "id": 1,
+  "email": "joao@email.com",
+  "role": "PARTICIPANT"
+}
+```
+| Código | Significado |
+| --- | --- |
+| 200 | Login bem-sucedido |
+| 401 | Credenciais inválidas |
+| 400 | Campos obrigátorios ausentes |
+
+## 1.3 Listagem de Eventos
+**GET /api/v1/events**
+- Descrição: Retorna todos os eventos, com opção de filtros por status.
+    - Parâmetros(opcionais):
+    * status - ACTIVE, CANCELED, FINISHED
+
+**Saída (JSON): `200 OK`**
+```json
+[
+  {
+    "id": 1,
+    "title": "QA na prática",
+    "description": "Aprenda o que é e o que faz um QA na prática",
+    "location": "Teatro Algibeira",
+    "date": "2026-10-10",
+    "hour": "08:30",
+    "workload": 20,
+    "capacity": 50,
+    "speakerName": "Victor Oliveira",
+    "speakerTitle": "Quality Assurance Specialist",
+    "status": "ACTIVE",
+    "organizerId": 2
+  }
+]
+```
+
+| Código | Significado |
+| --- | --- |
+| 200 | Lista retornada (pode ser vazia) |
+| 400 | Parâmetros inválidos |
+
+## 1.4 Criação de Evento
+``POST /api/v1/events/?``
+- Descrição: Cria um novo evento. Apenas usuários com papel ``ORGANIZER`` ou ``ADMIN`` podem acessar.
+
+**Entrada (JSON)**
+```json 
+{
+  "title": "Aprenda GIT de uma vez por todas!",
+  "description": "Workshop com Hands-on para prática ativa de versionamento com GIT",
+  "location": "Teatro Algibeira",
+  "date": "2026-10-16",
+  "hour": "14:30",
+  "workload": 10,
+  "capacity": 50,
+  "speakerName": "Victor Oliveira",
+  "speakerTitle": "Quality Assurance Specialist"
+}
+```
+**Saída (JSON): `201 (CREATED)`**
+```json
+{
+    "id": 6,
+    "title": "Aprenda GIT de uma vez por todas!",
+    "description": "Workshop com Hands-on para prática ativa de versionamento com GIT",
+    "location": "Teatro Algibeira",
+    "date": "2026-10-16",
+    "hour": "14:30",
+    "workload": 10,
+    "capacity": 50,
+    "speakerName": "Victor Oliveira",
+    "speakerTitle": "Quality Assurance Specialist",
+    "status": "ACTIVE",
+    "organizerId": 2
+}
+```
+| Código | Significado |
+| --- | --- |
+| 201 | Evento criado com sucesso |
+| 400 | Dados inválidos (ex: data passada, capacidade e workload <0) |
+| 401 | Usuário não autenticado |
+| 403 | Usuário não tem permissão (não é organizador/admin)
+| 422 | Violação da regra de negócio |
+
+## 1.5 Inscrição em Evento
+``POST /api/v1/events/{eventId}/registration``
+- Descrição: Inscrição de um usuário autenticado em um evento específico. O ``eventId`` é passado na URL
+
+**Entrada: N/A**
+**Saída (JSON): ``201 CREATED``**
+```json
+    {
+        "id": 10,
+        "userId": 1,
+        "eventId": 1,
+        "registrationAt": "2026-09-01T10:30:00",
+        "status": "ACTIVE",
+        "attendanceConfirmed": false,
+        "attendanceConfirmedAt": null,
+        "qrCode": "abc123def456..."
+    }
+```
+| Código | Significado |
+| --- | --- |
+| 201 | Inscrição realizada com sucesso |
+| 400 | Regra violada (ex: já inscrito, evento lotado ou cancelado) |
+| 401 | Usuário não autenticado |
+| 404 | Evento não encontrado |
+| 409 | Usuário já inscrito no evento |
+
+## 1.6 Validação de Presença (via QR Code)
+``PATCH /api/v1/registration/{registrationId}/confirm-attendance``
+- Descrição: Organizador ou admin confirma a presença de um participante, atualizando o status da inscrição para `ATTENDED` e registrando a data/hora.
+**Entrada: N/A**
+**Saída (JSON): ``200 OK``**
+```json
+    {
+        "id": 10,
+        "userId": 1,
+        "eventId": 1,
+        "status": "ATTENDED",
+        "attendanceConfirmed": true,
+        "attendanceConfirmedAt": "2026-09-10T15:30:00"
+    }
+```
+| Código | Significado |
+| --- | --- |
+| 200 | Presença confirmada (OK) |
+| 400 | Evento ainda não ocorreu ou presença já está confirmada |
+| 401 | Usuário não autenticado |
+| 403 | Usuário não é organizador/admin do evento |
+| 404 | Inscrição não encontrada |
+
+## 1.7 Emissão de Certificado
+
+
 ## Matriz de Permissões
 *(A ser preenchido)*
 
