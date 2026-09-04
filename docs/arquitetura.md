@@ -53,7 +53,7 @@ Cliente → Controller → Service → Repository → PostgreSQL
 
 | Tema | Decisão |
 |---|---|
-| Linguagem e framework | Java 21 e Spring Boot 4.1.0, conforme `build.gradle` existente. |
+| Linguagem e framework | Java 21 e Spring Boot 4.1.0 |
 | Persistência | Spring Data JPA e PostgreSQL 16. |
 | Schema | Flyway; cada alteração estrutural é uma migration SQL imutável e versionada. |
 | Validação | Bean Validation nos DTOs; regras que consultam banco pertencem aos serviços. |
@@ -62,7 +62,3 @@ Cliente → Controller → Service → Repository → PostgreSQL
 | Certificado | Registro único por inscrição; PDF em diretório local configurável, fora do Git. |
 | Segurança | JWT e autorização efetiva depois da 1AV; a matriz de permissões já define o comportamento alvo. |
 | Documentação | OpenAPI/Swagger para a API implementada. |
-
-## Fronteiras importantes
-
-O front-end ou aplicativo móvel deve renderizar o token como imagem QR e enviar o valor lido à API. A API não aceita uma presença apenas pelo ID da inscrição, pois isso não demonstra uso do QR Code. O endpoint de check-in recebe o token e confere inscrição, evento, status e autorização do ator quando JWT estiver ativo.
