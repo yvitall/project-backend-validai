@@ -46,5 +46,3 @@ src/main/resources/application.yml
 ### Logs e SO ###
 *.log
 .DS_Store
-
-/docs/instruct.md
