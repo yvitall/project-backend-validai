@@ -36,13 +36,6 @@ out/
 ### VS Code ###
 .vscode/
 
-src/main/resources/application.properties
-src/main/resources/application.yml
-
-# Permite subir apenas os modelos/exemplos sem senhas
-!src/main/resources/application.properties.example
-!src/main/resources/application.yml.example
-
 ### Logs e SO ###
 *.log
 .DS_Store
