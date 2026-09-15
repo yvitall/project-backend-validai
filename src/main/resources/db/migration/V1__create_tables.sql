@@ -39,3 +39,13 @@ CREATE TABLE registrations(
     CONSTRAINT fk_registrations_event FOREIGN KEY (event_id) REFERENCES events (id),
     CONSTRAINT uk_user_event UNIQUE (user_id, event_id)
 );
+
+CREATE TABLE certificates(
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    registration_id BIGINT NOT NULL UNIQUE,
+    issue_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    certificate_code VARCHAR(255) NOT NULL UNIQUE,
+    pdf_url VARCHAR(255) NOT NULL UNIQUE,
+
+    CONSTRAINT fk_certificates_registrations FOREIGN KEY (registration_id) REFERENCES registrations (id)
+);
