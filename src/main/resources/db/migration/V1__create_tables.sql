@@ -25,3 +25,17 @@ CREATE TABLE events(
     CONSTRAINT fk_events_user FOREIGN KEY (organizer_id)
         REFERENCES users (id)
 );
+
+CREATE TABLE registrations(
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    event_id BIGINT NOT NULL,
+    registration_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(20) DEFAULT 'ACTIVE' NOT NULL CHECK(status IN ('ACTIVE', 'CANCELED', 'ATTENDED')),
+    attendance_confirmed BOOLEAN DEFAULT FALSE NOT NULL,
+    attendance_confirmed_at TIMESTAMP,
+    qr_code VARCHAR(255) NOT NULL UNIQUE,
+    CONSTRAINT fk_registrations_user FOREIGN KEY (user_id) REFERENCES users (id),
+    CONSTRAINT fk_registrations_event FOREIGN KEY (event_id) REFERENCES events (id),
+    CONSTRAINT uk_user_event UNIQUE (user_id, event_id)
+);
