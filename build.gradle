@@ -32,6 +32,7 @@ dependencies {
 	testAnnotationProcessor 'org.projectlombok:lombok'
 	implementation 'org.springframework.boot:spring-boot-starter-flyway'
 	testImplementation 'org.springframework.boot:spring-boot-starter-flyway-test'
+	implementation 'org.flywaydb:flyway-database-postgresql'
 }
 
 tasks.named('test') {
