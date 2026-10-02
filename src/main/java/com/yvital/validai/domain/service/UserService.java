@@ -23,6 +23,19 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public List<User> findByRole(UserRole role) {
+        if (role == null) {
+            return findAll();
+        }
+        return userRepository.findByRole(role);
+    }
+
+    public User updateRole(Long id, UserRole role) {
+        User user = findById(id);
+        user.setRole(role);
+        return userRepository.save(user);
+    }
+
     public User findById(Long id) {
         return userRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Usuário não encontrado com o ID: " + id));
