@@ -6,10 +6,12 @@ import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,7 +32,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1") // Ajustado para corresponder exatamente à documentação para o base path, ou usarei /users
+@RequestMapping("/api/v1") // Ajustado para corresponder exatamente à documentação para o base path, ou
+                           // usarei /users
 @RequiredArgsConstructor
 public class UserController {
 
@@ -51,18 +54,18 @@ public class UserController {
     @PostMapping("/auth/login")
     public ResponseEntity<LoginResponseDTO> loginUser(@Valid @RequestBody UserLoginDTO loginRequest) {
         User userAuth = userService.login(loginRequest.getEmail(), loginRequest.getPassword());
-        
+
         String token = tokenService.generateToken(userAuth);
-        
+
         LoginResponseDTO responseDTO = LoginResponseDTO.builder()
                 .accessToken(token)
                 .tokenType("Bearer")
-                .expiresIn(7200L) // 2 horas (em segundos)
+                .expiresIn(7200L)
                 .id(userAuth.getId())
                 .email(userAuth.getEmail())
                 .role(userAuth.getRole())
                 .build();
-                
+
         return ResponseEntity.ok(responseDTO);
     }
 
@@ -87,11 +90,31 @@ public class UserController {
         return ResponseEntity.ok(userMapper.toResponse(updatedUser));
     }
 
+    // 1.11 Remoção de Usuário (Soft Delete ou Hard Delete)
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
+        userService.deleteUser(userId); // O método no service cuida da lógica de deleção
+        return ResponseEntity.noContent().build();
+    }
+
+    // 1.12 Alteração dos Dados Pessoais do Próprio Usuário
+    @PreAuthorize("hasAnyRole('ADMIN', 'PARTICIPANT')")
+    @PutMapping("/users/me")
+    public ResponseEntity<UserResponseDTO> updateMyProfile(@Valid @RequestBody UserUpdateDTO updateDTO) {
+        // Usamos o método genérico update, mas com lógica de autenticação
+        User userToUpdate = userMapper.toEntity(updateDTO);
+        User updatedUser = userService.updateUser(updateDTO.getId(), userToUpdate);
+        return ResponseEntity.ok(userMapper.toResponse(updatedUser));
+    }
+
     // 1.14 Minhas Inscrições (Resumo/Mock - Endpoint pertencente ao path de User)
-    // Na próxima unidade, onde a entidade Registration for desenvolvida, isso retornará os dados reais.
+    // Na próxima unidade, onde a entidade Registration for desenvolvida, isso
+    // retornará os dados reais.
     @GetMapping("/users/me/registrations")
     public ResponseEntity<List<Object>> getMyRegistrations() {
-        // Implementação futura quando RegistrationDTO e RegistrationService forem criados.
+        // Implementação futura quando RegistrationDTO e RegistrationService forem
+        // criados.
         // O Subject do token JWT nos dará o email/id do usuário para buscar.
         return ResponseEntity.ok(List.of());
     }
