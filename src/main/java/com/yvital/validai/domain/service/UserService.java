@@ -23,9 +23,22 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public List<User> findByRole(UserRole role) {
+        if (role == null) {
+            return findAll();
+        }
+        return userRepository.findByRole(role);
+    }
+
+    public User updateRole(Long id, UserRole role) {
+        User user = findById(id);
+        user.setRole(role);
+        return userRepository.save(user);
+    }
+
     public User findById(Long id) {
         return userRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Usuário não encontrado com o ID: " + id));
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com o ID: " + id));
     }
 
     public User createUser(User user) {
@@ -34,28 +47,30 @@ public class UserService {
             throw new RuntimeException("Este e-mail já está cadastrado.");
         }
         String hashSenha = passwordEncoder.encode(user.getPasswordHash());
-        
+
         user.setEmail(email);
         user.setRole(UserRole.PARTICIPANT);
         user.setPasswordHash(hashSenha);
+        user.setCreatedAt(user.getCreatedAt());
 
         return userRepository.save(user);
     }
 
-    public User login(String email, String password){
+    public User login(String email, String password) {
         User user = userRepository.findByEmail(email)
-        .orElseThrow(() -> new RuntimeException("Credenciais Inválidas."));
+                .orElseThrow(() -> new RuntimeException("Credenciais Inválidas."));
 
-        if (!passwordEncoder.matches(password, user.getPasswordHash())){
+        if (!passwordEncoder.matches(password, user.getPasswordHash())) {
             throw new RuntimeException("Credenciais Inválidas.");
         }
         return user;
     }
 
-    public User updateUser(Long id, User dadosAtualizados){
+    public User updateUser(Long id, User dadosAtualizados) {
         User usuarioExistente = findById(id);
 
-        if (!usuarioExistente.getEmail().equals(dadosAtualizados.getEmail()) && userRepository.existsByEmail(dadosAtualizados.getEmail())){
+        if (!usuarioExistente.getEmail().equals(dadosAtualizados.getEmail())
+                && userRepository.existsByEmail(dadosAtualizados.getEmail())) {
             throw new RuntimeException("Este e-mail já está em uso.");
         }
 
