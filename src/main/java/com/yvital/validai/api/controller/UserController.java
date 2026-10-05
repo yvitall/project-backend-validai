@@ -22,6 +22,7 @@ import com.yvital.validai.api.dto.UserCreateDTO;
 import com.yvital.validai.api.dto.UserLoginDTO;
 import com.yvital.validai.api.dto.UserResponseDTO;
 import com.yvital.validai.api.dto.UserRoleUpdateDTO;
+import com.yvital.validai.api.dto.UserUpdateDTO;
 import com.yvital.validai.api.mapper.UserMapper;
 import com.yvital.validai.domain.enums.UserRole;
 import com.yvital.validai.domain.model.User;
@@ -99,23 +100,10 @@ public class UserController {
     }
 
     // 1.12 Alteração dos Dados Pessoais do Próprio Usuário
-    @PreAuthorize("hasAnyRole('ADMIN', 'PARTICIPANT')")
     @PutMapping("/users/me")
     public ResponseEntity<UserResponseDTO> updateMyProfile(@Valid @RequestBody UserUpdateDTO updateDTO) {
-        // Usamos o método genérico update, mas com lógica de autenticação
         User userToUpdate = userMapper.toEntity(updateDTO);
         User updatedUser = userService.updateUser(updateDTO.getId(), userToUpdate);
         return ResponseEntity.ok(userMapper.toResponse(updatedUser));
-    }
-
-    // 1.14 Minhas Inscrições (Resumo/Mock - Endpoint pertencente ao path de User)
-    // Na próxima unidade, onde a entidade Registration for desenvolvida, isso
-    // retornará os dados reais.
-    @GetMapping("/users/me/registrations")
-    public ResponseEntity<List<Object>> getMyRegistrations() {
-        // Implementação futura quando RegistrationDTO e RegistrationService forem
-        // criados.
-        // O Subject do token JWT nos dará o email/id do usuário para buscar.
-        return ResponseEntity.ok(List.of());
     }
 }
