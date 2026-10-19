@@ -1,64 +1,41 @@
 package com.yvital.validai.core.config;
 
-import com.yvital.validai.infra.security.SecurityFilter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 
 @Configuration
-@EnableWebSecurity
-@EnableMethodSecurity // ATIVA O @PreAuthorize NO CONTROLLER
-@RequiredArgsConstructor
+@EnableWebSecurity // Avisa ao Spring: "Deixa que eu dito as regras de segurança agora"
 public class SecurityConfig {
 
-    private final SecurityFilter securityFilter;
-
+    // 1. O LIQUIDIFICADOR DE SENHAS
+    // Quando você for salvar um usuário ou checar a senha no login,
+    // o Spring vai usar essa ferramenta para embaralhar/desembaralhar.
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers(
-                "/v2/api-docs",
-                "/v3/api-docs",
-                "/v3/api-docs/**",
-                "/swagger-resources",
-                "/swagger-resources/**",
-                "/configuration/ui",
-                "/configuration/security",
-                "/swagger-ui/**",
-                "/webjars/**",
-                "/swagger-ui.html");
-    }
-
+    // 2. O LIVRO DE REGRAS BÁSICO
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                // Desliga a proteção de formulários web (CSRF), pois nossa API não tem telas
+                // HTML próprias
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        // Rotas públicas (Qualquer um pode acessar)
-                        .requestMatchers(HttpMethod.POST, "/api/v1/users/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
 
-                        // Todas as outras rotas exigem que o usuário esteja logado (ter um Token
-                        // válido)
-                        .anyRequest().authenticated())
-                // Coloca o nosso segurança (Filtro) para revistar as requisições antes do
-                // Spring
-                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
+                // Ativa a "Amnésia" do servidor. Ele não vai lembrar quem está logado
+                // (Stateless)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                // Aqui trancamos tudo. "Qualquer requisição precisa estar autenticada"
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().authenticated());
 
         return http.build();
     }
