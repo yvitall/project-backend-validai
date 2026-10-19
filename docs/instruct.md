@@ -39,8 +39,8 @@ Desenvolver uma API RESTful em Java (Spring Boot) para gerenciamento e emissão 
 - [x] Critérios de aceitação (Mínimo 10).
 - [x] Estratégia de banco e migrations.
 - [x] Repositório no GitHub configurado.
-- [] Protótipo da API (Swagger rodando, conexão com banco).
-- [] CRUD das entidades principais operando.
+- [x] Protótipo da API (Swagger rodando, conexão com banco).
+- [x] CRUD das entidades principais operando.
 
 ## ✅ **Apresentação Final: Projeto polido, testado e pronto.** - (05/10/2026) 
 - [x] Requisitos funcionais e não funcionais (1,0)
@@ -50,9 +50,9 @@ Desenvolver uma API RESTful em Java (Spring Boot) para gerenciamento e emissão 
 - [x] Arquitetura e estrutura do projeto (1,0)
 - [x] Matriz de permissões (1,0)
 - [x] Backlog + critérios de aceitação (1,0)
-- [] Swagger/API inicial funcionando (1,0)
+- [x] Swagger/API inicial funcionando (1,0)
 - [x] Organização no GitHub (1,0)
-- [] Apresentação/defesa técnica (1,0)
+- [x] Apresentação/defesa técnica (1,0)
 
 
 ## Sistema de Notas (1AV) - Backend
