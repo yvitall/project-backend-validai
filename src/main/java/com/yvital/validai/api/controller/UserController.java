@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.token.TokenService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -28,6 +27,7 @@ import com.yvital.validai.api.mapper.UserMapper;
 import com.yvital.validai.domain.enums.UserRole;
 import com.yvital.validai.domain.model.User;
 import com.yvital.validai.domain.service.UserService;
+import com.yvital.validai.core.security.TokenService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
