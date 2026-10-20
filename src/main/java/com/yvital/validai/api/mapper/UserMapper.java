@@ -2,15 +2,15 @@ package com.yvital.validai.api.mapper;
 
 import org.springframework.stereotype.Component;
 
-import com.yvital.validai.api.dto.UserCreateDTO;
-import com.yvital.validai.api.dto.UserResponseDTO;
-import com.yvital.validai.api.dto.UserUpdateDTO;
+import com.yvital.validai.api.dto.request.UserCreateDTO;
+import com.yvital.validai.api.dto.request.UserUpdateDTO;
+import com.yvital.validai.api.dto.response.UserResponseDTO;
 import com.yvital.validai.domain.model.User;
 
 @Component
 public class UserMapper {
 
-    public User toEntity(UserCreateDTO dto){
+    public User toEntity(UserCreateDTO dto) {
         User user = new User();
         user.setFirstName(dto.getFirstName());
         user.setLastName(dto.getLastName());
@@ -20,7 +20,7 @@ public class UserMapper {
         return user;
     }
 
-    public User toEntity(UserUpdateDTO dto){
+    public User toEntity(UserUpdateDTO dto) {
         User user = new User();
         user.setFirstName(dto.getFirstName());
         user.setLastName(dto.getLastName());
@@ -28,7 +28,8 @@ public class UserMapper {
 
         return user;
     }
-    public UserResponseDTO toResponse(User entity){
+
+    public UserResponseDTO toResponse(User entity) {
         UserResponseDTO response = new UserResponseDTO();
 
         response.setId(entity.getId());

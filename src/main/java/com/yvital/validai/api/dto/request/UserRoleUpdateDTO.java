@@ -1,4 +1,4 @@
-package com.yvital.validai.api.dto;
+package com.yvital.validai.api.dto.request;
 
 import com.yvital.validai.domain.enums.UserRole;
 import jakarta.validation.constraints.NotNull;

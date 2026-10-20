@@ -1,4 +1,4 @@
-package com.yvital.validai.api.dto;
+package com.yvital.validai.api.dto.response;
 
 import java.time.LocalDateTime;
 
