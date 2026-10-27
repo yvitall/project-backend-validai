@@ -1,6 +1,7 @@
 package com.yvital.validai.api.dto.response;
 
 import com.yvital.validai.domain.enums.UserRole;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
