@@ -24,17 +24,16 @@ import com.yvital.validai.api.dto.request.UserUpdateDTO;
 import com.yvital.validai.api.dto.response.LoginResponseDTO;
 import com.yvital.validai.api.dto.response.UserResponseDTO;
 import com.yvital.validai.api.mapper.UserMapper;
+import com.yvital.validai.core.security.TokenService;
 import com.yvital.validai.domain.enums.UserRole;
 import com.yvital.validai.domain.model.User;
 import com.yvital.validai.domain.service.UserService;
-import com.yvital.validai.core.security.TokenService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1") // Ajustado para corresponder exatamente à documentação para o base path, ou
-                           // usarei /users
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class UserController {
 
