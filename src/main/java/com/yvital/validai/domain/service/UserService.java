@@ -57,7 +57,7 @@ public class UserService {
     }
 
     public User login(String email, String password) {
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(email.trim().toLowerCase(Locale.ROOT))
                 .orElseThrow(() -> new RuntimeException("Credenciais Inválidas."));
 
         if (!passwordEncoder.matches(password, user.getPasswordHash())) {
