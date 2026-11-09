@@ -12,7 +12,7 @@ Evoluir a API RESTful em Java (Spring Boot) desenvolvida na 1AV para uma versão
 
 - [ ] Manter a aplicação da 1AV executando (CRUD de Usuários base).
 - [ ] Cadastro de usuários com credenciais válidas.
-- [ ] Armazenamento de senhas com hash seguro (BCrypt).
+- [x] Armazenamento de senhas com hash seguro (BCrypt).
 - [ ] Autenticação por login (`/auth/login`) retornando token JWT.
 - [ ] Configurar chave JWT utilizando variável de ambiente (`.env`).
 - [ ] Gerar token JWT com tempo de expiração definido.
