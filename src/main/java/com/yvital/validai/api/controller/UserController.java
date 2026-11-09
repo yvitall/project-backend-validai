@@ -18,13 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yvital.validai.api.dto.request.UserCreateDTO;
-import com.yvital.validai.api.dto.request.UserLoginDTO;
 import com.yvital.validai.api.dto.request.UserRoleUpdateDTO;
 import com.yvital.validai.api.dto.request.UserUpdateDTO;
-import com.yvital.validai.api.dto.response.LoginResponseDTO;
 import com.yvital.validai.api.dto.response.UserResponseDTO;
 import com.yvital.validai.api.mapper.UserMapper;
-import com.yvital.validai.core.security.TokenService;
 import com.yvital.validai.domain.enums.UserRole;
 import com.yvital.validai.domain.model.User;
 import com.yvital.validai.domain.service.UserService;
@@ -39,34 +36,14 @@ public class UserController {
 
     private final UserService userService;
     private final UserMapper userMapper;
-    private final TokenService tokenService;
 
     // 1.1 Cadastro de Usuário
-    @PostMapping("/users/register")
+    @PostMapping("/register")
     public ResponseEntity<UserResponseDTO> registerUser(@Valid @RequestBody UserCreateDTO request) {
         User userEntity = userMapper.toEntity(request);
         User savedUser = userService.createUser(userEntity);
         UserResponseDTO responseDTO = userMapper.toResponse(savedUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
-    }
-
-    // 1.2 Login (Autenticação)
-    @PostMapping("/auth/login")
-    public ResponseEntity<LoginResponseDTO> loginUser(@Valid @RequestBody UserLoginDTO loginRequest) {
-        User userAuth = userService.login(loginRequest.getEmail(), loginRequest.getPassword());
-
-        String token = tokenService.generateToken(userAuth);
-
-        LoginResponseDTO responseDTO = LoginResponseDTO.builder()
-                .accessToken(token)
-                .tokenType("Bearer")
-                .expiresIn(7200L)
-                .id(userAuth.getId())
-                .email(userAuth.getEmail())
-                .role(userAuth.getRole())
-                .build();
-
-        return ResponseEntity.ok(responseDTO);
     }
 
     // 1.9 Listagem de Usuários (Admin)
