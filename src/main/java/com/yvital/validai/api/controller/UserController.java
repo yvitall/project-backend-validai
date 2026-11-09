@@ -30,7 +30,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/users/")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -48,7 +48,7 @@ public class UserController {
 
     // 1.9 Listagem de Usuários (Admin)
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/users")
+    @GetMapping()
     public ResponseEntity<List<UserResponseDTO>> getAllUsers(@RequestParam(required = false) UserRole role) {
         List<User> users = userService.findByRole(role);
         List<UserResponseDTO> responseDTOs = users.stream()
@@ -59,7 +59,7 @@ public class UserController {
 
     // 1.10 Atualização de Papel (Admin)
     @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("/users/{userId}/role")
+    @PatchMapping("/{userId}/role")
     public ResponseEntity<UserResponseDTO> updateUserRole(
             @PathVariable Long userId,
             @Valid @RequestBody UserRoleUpdateDTO roleUpdate) {
@@ -69,14 +69,14 @@ public class UserController {
 
     // 1.11 Remoção de Usuário (Soft Delete ou Hard Delete)
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/users/{userId}")
+    @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
         userService.deleteUser(userId); // O método no service cuida da lógica de deleção
         return ResponseEntity.noContent().build();
     }
 
     // 1.12 Alteração dos Dados Pessoais do Próprio Usuário
-    @PutMapping("/users/me")
+    @PutMapping("/me")
     public ResponseEntity<UserResponseDTO> updateMyProfile(@Valid @RequestBody UserUpdateDTO updateDTO) {
         User userToUpdate = userMapper.toEntity(updateDTO);
         User updatedUser = userService.updateUser(updateDTO.getId(), userToUpdate);
