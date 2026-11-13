@@ -51,3 +51,4 @@ public class TokenService {
         return Instant.now().plusSeconds(expirationSeconds);
     }
 }
+// camada service do token: lógica e regra para criação e verificação do token
