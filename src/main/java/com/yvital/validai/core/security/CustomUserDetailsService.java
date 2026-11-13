@@ -28,7 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         if (user.getRole() == UserRole.ADMIN) {
             authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-            authorities.add(new SimpleGrantedAuthority("ROLE_ORGANIZER")); // Admin também pode organizar
+            authorities.add(new SimpleGrantedAuthority("ROLE_ORGANIZER"));
         } else if (user.getRole() == UserRole.ORGANIZER) {
             authorities.add(new SimpleGrantedAuthority("ROLE_ORGANIZER"));
         } else {
