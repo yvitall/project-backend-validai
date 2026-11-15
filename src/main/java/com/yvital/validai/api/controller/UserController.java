@@ -30,7 +30,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/users/")
+@RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -49,7 +49,8 @@ public class UserController {
     // 1.9 Listagem de Usuários (Admin)
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping()
-    public ResponseEntity<List<UserResponseDTO>> getAllUsers(@RequestParam(required = false) UserRole role) {
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers(
+            @RequestParam(value = "role", required = false) UserRole role) {
         List<User> users = userService.findByRole(role);
         List<UserResponseDTO> responseDTOs = users.stream()
                 .map(userMapper::toResponse)
@@ -61,7 +62,7 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{userId}/role")
     public ResponseEntity<UserResponseDTO> updateUserRole(
-            @PathVariable Long userId,
+            @PathVariable("userId") Long userId,
             @Valid @RequestBody UserRoleUpdateDTO roleUpdate) {
         User updatedUser = userService.updateRole(userId, roleUpdate.getRole());
         return ResponseEntity.ok(userMapper.toResponse(updatedUser));
@@ -70,7 +71,7 @@ public class UserController {
     // 1.11 Remoção de Usuário (Soft Delete ou Hard Delete)
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
+    public ResponseEntity<Void> deleteUser(@PathVariable("userId") Long userId) {
         userService.deleteUser(userId); // O método no service cuida da lógica de deleção
         return ResponseEntity.noContent().build();
     }
